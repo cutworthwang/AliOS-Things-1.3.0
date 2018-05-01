@@ -1,12 +1,12 @@
 /***************************************************************************//**
 * \file cy_scb_uart.c
-* \version 2.0
+* \version 2.10
 *
 * Provides UART API implementation of the SCB driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2017, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -1157,6 +1157,7 @@ void Cy_SCB_UART_Interrupt(CySCB_Type *base, cy_stc_scb_uart_context_t *context)
 }
 
 
+
 /*******************************************************************************
 * Function Name: HandleDataReceive
 ****************************************************************************//**
@@ -1185,7 +1186,7 @@ static void HandleDataReceive(CySCB_Type *base, cy_stc_scb_uart_context_t *conte
     /* Move the buffer */
     context->rxBufIdx  += numCopied;
     context->rxBufSize -= numCopied;
-    
+
     /*
      * Added to workaround long time blocking when receiving big packets during SSL handshake
      */
@@ -1193,8 +1194,6 @@ static void HandleDataReceive(CySCB_Type *base, cy_stc_scb_uart_context_t *conte
     {   
         krhino_buf_queue_send(context->buffer_queue,context->rxBuf,numCopied);
     }
-
-    /******************************************************************************************/
 
     if (0UL == context->rxBufSize)
     {

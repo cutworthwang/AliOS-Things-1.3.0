@@ -1,12 +1,12 @@
 /***************************************************************************//**
 * \file cy_sysclk.h
-* \version 1.10
+* \version 1.10.1
 *
 * Provides an API declaration of the sysclk driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2017, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -163,6 +163,11 @@
 * \section group_sysclk_changelog Changelog
 * <table class="doxtable">
 *   <tr><th>Version</th><th>Changes</th><th>Reason for Change</th></tr>
+*   <tr>
+*     <td>1.10.1</td>
+*     <td>Renamed Power Management section to Low Power Callback section</td>
+*     <td>Documentation update and clarification</td>
+*   </tr>
 *   <tr>
 *     <td rowspan="5">1.10</td>
 *     <td>Updated FLL parameter calculation</td>
@@ -372,7 +377,7 @@
 *
 *   \defgroup group_sysclk_trim_funcs      Functions
 * \}
-* \defgroup group_sysclk_pm              Power Management
+* \defgroup group_sysclk_pm              Low Power Callback
 * \{
 *   Entering and exiting low power modes require compatible clock configurations
 *   to be set before entering low power and restored upon wake-up and exit. The

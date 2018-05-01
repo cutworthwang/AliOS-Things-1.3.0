@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2017, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2017-2018, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -26,7 +26,7 @@ extern "C" {
 
 static cy_en_ble_eco_status_t Cy_BLE_HalRcbRegRead(uint16_t addr, uint16_t *data);
 static cy_en_ble_eco_status_t Cy_BLE_HalRcbRegWrite(uint16_t addr, uint16_t data);
-static cy_en_ble_eco_status_t Cy_BLE_HalEcoSetTrim(uint8_t trim);
+static cy_en_ble_eco_status_t Cy_BLE_HalEcoSetTrim(uint8_t trim, uint8_t startUpTime);
 static cy_en_ble_eco_status_t Cy_BLE_HalMxdRadioEnableClocks(const cy_stc_ble_bless_eco_cfg_params_t *ecoConfig);
 
 
@@ -213,14 +213,15 @@ static cy_en_ble_eco_status_t Cy_BLE_HalRcbRegWrite(uint16_t addr, uint16_t data
 *
 *  Sets ECO trim value.
 *
-*  \param trim: Trim value.
+*  \param trim       : Trim value.
+*         startUpTime: start up time delay.
 *
 *  \return
 *   CY_BLE_ECO_SUCCESS - On successful operation.
 *   CY_BLE_ECO_HARDWARE_ERROR - If RCB operation failed
 *
 *******************************************************************************/
-static cy_en_ble_eco_status_t Cy_BLE_HalEcoSetTrim(uint8_t trim)
+static cy_en_ble_eco_status_t Cy_BLE_HalEcoSetTrim(uint8_t trim, uint8_t startUpTime)
 {
     uint16_t reg = CY_BLE_RF_DCXO_CFG_REG_VALUE;
     cy_en_ble_eco_status_t status;
@@ -237,7 +238,7 @@ static cy_en_ble_eco_status_t Cy_BLE_HalEcoSetTrim(uint8_t trim)
         status = Cy_BLE_HalRcbRegWrite(CY_BLE_RF_DCXO_CFG2_REG, CY_BLE_RF_DCXO_CFG2_REG_VALUE);
     }
     
-    Cy_SysLib_DelayUs(500u);    
+    Cy_SysLib_DelayUs(startUpTime * CY_BLE_ECO_SET_TRIM_DELAY_COEF);
     
     return(status);
 }
@@ -458,6 +459,9 @@ void Cy_BLE_EcoStop(void)
 *
 *  This clock is stopped in the deep sleep and hibernate power modes.
 *
+*  The config file cy_ble_config.h is used to redefining default cy_ble_clk.h
+*  defines.
+*
 *  \param ecoConfig: Clock configuration of type 'cy_stc_ble_bless_eco_cfg_params_t'.
 *
 *  \return
@@ -649,7 +653,7 @@ cy_en_ble_eco_status_t Cy_BLE_EcoStart(const cy_stc_ble_bless_eco_cfg_params_t *
                 if(status == CY_BLE_ECO_SUCCESS)
                 {
                     /* Set Load capacitance */
-                    status = Cy_BLE_HalEcoSetTrim(ecoConfig->loadCap);
+                    status = Cy_BLE_HalEcoSetTrim(ecoConfig->loadCap, ecoConfig->ecoXtalStartUpTime);
                 }
             }
         }

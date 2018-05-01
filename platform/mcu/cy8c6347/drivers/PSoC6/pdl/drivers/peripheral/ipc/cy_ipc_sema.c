@@ -1,13 +1,13 @@
 /***************************************************************************//**
 * \file cy_ipc_sema.c
-* \version 1.10
+* \version 1.10.1
 *
 *  Description:
 *   IPC Semaphore Driver - This source file contains the source code for the
 *   semaphore level APIs for the IPC interface.
 *
 ********************************************************************************
-* Copyright 2016-2017, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -27,7 +27,7 @@ static IPC_STRUCT_Type* cy_semaIpcStruct;
 /*
 * Internal IPC semaphore control data structure.
 */
-typedef struct 
+typedef struct
 {
     uint32_t maxSema;      /* Maximum semaphores in system */
     uint32_t *arrayPtr;    /* Pointer to semaphores array  */
@@ -57,7 +57,7 @@ typedef struct
 * \param memPtr
 *  This points to the array of (count/32) words that contain the semaphore data.
 *
-* \return
+* \return Status of the operation
 *    \retval CY_IPC_SEMA_SUCCESS: Successfully initialized
 *    \retval CY_IPC_SEMA_BAD_PARAM:     Memory pointer is NULL and count is not zero,
 *                             or count not multiple of 32
@@ -148,7 +148,8 @@ cy_en_ipcsema_status_t Cy_IPC_Sema_Init(uint32_t ipcChannel,
 * CY_IPC_SEMA_LOCKED.
 *
 * It first acquires the IPC channel that is used for all the semaphores, sets
-* the semaphore if it is cleared, then releases the IPC channel used for the semaphore.
+* the semaphore if it is cleared, then releases the IPC channel used for the
+* semaphore.
 *
 * \param semaNumber
 *  The semaphore number to acquire.
@@ -157,7 +158,14 @@ cy_en_ipcsema_status_t Cy_IPC_Sema_Init(uint32_t ipcChannel,
 *  When this parameter is enabled the function can be preempted by another
 *  task or other forms of context switching in an RTOS environment.
 *
-* \return
+* \note
+*  If <b>preemptable</b> is enabled (true), the user must ensure that there are
+*  no deadlocks in the system, which can be caused by an interrupt that occurs
+*  after the IPC channel is locked. Unless the user is ready to handle IPC
+*  channel locks correctly at the application level, set <b>premptable</b> to
+*  false.
+*
+* \return Status of the operation
 *    \retval CY_IPC_SEMA_SUCCESS:      The semaphore was set successfully
 *    \retval CY_IPC_SEMA_LOCKED:       The semaphore channel is busy or locked
 *                              by another process
@@ -229,7 +237,8 @@ cy_en_ipcsema_status_t Cy_IPC_Sema_Set(uint32_t semaNumber, bool preemptable)
 * This functions tries to releases a semaphore.
 *
 * It first acquires the IPC channel that is used for all the semaphores, clears
-* the semaphore if it is set, then releases the IPC channel used for the semaphores.
+* the semaphore if it is set, then releases the IPC channel used for the
+* semaphores.
 *
 * \param semaNumber
 *  The index of the semaphore to release.
@@ -238,7 +247,14 @@ cy_en_ipcsema_status_t Cy_IPC_Sema_Set(uint32_t semaNumber, bool preemptable)
 *  When this parameter is enabled the function can be preempted by another
 *  task or other forms of context switching in an RTOS environment.
 *
-* \return
+* \note
+*  If <b>preemptable</b> is enabled (true), the user must ensure that there are
+*  no deadlocks in the system, which can be caused by an interrupt that occurs
+*  after the IPC channel is locked. Unless the user is ready to handle IPC
+*  channel locks correctly at the application level, set <b>premptable</b> to
+*  false.
+*
+* \return Status of the operation
 *    \retval CY_IPC_SEMA_SUCCESS:         The semaphore was cleared successfully
 *    \retval CY_IPC_SEMA_NOT_ACQUIRED:    The semaphore was already cleared
 *    \retval CY_IPC_SEMA_LOCKED:          The semaphore channel was semaphored or busy
@@ -309,7 +325,7 @@ cy_en_ipcsema_status_t Cy_IPC_Sema_Clear(uint32_t semaNumber, bool preemptable)
 * \param semaNumber
 *  The index of the semaphore to return status.
 *
-* \return
+* \return Status of the operation
 *     \retval CY_IPC_SEMA_STATUS_LOCKED:    The semaphore is in the set state.
 *     \retval CY_IPC_SEMA_STATUS_UNLOCKED:  The semaphore is in the cleared state.
 *     \retval CY_IPC_SEMA_OUT_OF_RANGE:     The semaphore number is not valid

@@ -1,13 +1,13 @@
 /***************************************************************************//**
 * \file cy_gpio.c
-* \version 1.10
+* \version 1.10.1
 *
 * \brief
 * Provides an API implementation of the GPIO driver
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2017, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -24,7 +24,7 @@ extern "C" {
 * Function Name: Cy_GPIO_Pin_Init
 ****************************************************************************//**
 *
-* \brief Initializes all pin configuration settings for the pin.
+* \brief Initializes all pin configuration settings for the specified pin.
 *
 * \param base
 * Pointer to the pin's port register base address
@@ -110,7 +110,7 @@ cy_en_gpio_status_t Cy_GPIO_Pin_Init(GPIO_PRT_Type *base, uint32_t pinNum, const
 *
 * The configuration structure used in this function has a 1:1 mapping to the
 * GPIO and HSIOM registers. Refer to the device Technical Reference Manual (TRM)
-* for the register details and how to populate them.
+* for the register details on how to populate them.
 *
 * \param base
 * Pointer to the pin's port register base address

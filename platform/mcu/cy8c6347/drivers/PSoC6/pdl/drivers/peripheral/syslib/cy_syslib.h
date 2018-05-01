@@ -1,12 +1,12 @@
 /***************************************************************************//**
 * \file cy_syslib.h
-* \version 2.0
+* \version 2.0.1
 *
-* Provides an API declaration of the syslib driver.
+* Provides an API declaration of the SysLib driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2017, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -31,7 +31,7 @@
 * * A variable type definition from MISRA-C which specifies signedness
 * * Cross compiler compatible attributes
 * * Getting a silicon-unique ID API
-* * Setting Wait states API
+* * Setting wait states API
 * * Resetting the backup domain API
 * * APIs to serve Fault handler
 *
@@ -124,6 +124,11 @@
 * \section group_syslib_changelog Changelog
 * <table class="doxtable">
 *   <tr><th>Version</th><th>Changes</th><th>Reason for Change</th></tr>
+*   <tr>
+*     <td>2.0.1</td>
+*     <td>Minor documentation edits</td>
+*     <td>Documentation update and clarification</td>
+*   </tr>
 *   <tr>
 *     <td rowspan="4"> 2.0</td>
 *     <td>

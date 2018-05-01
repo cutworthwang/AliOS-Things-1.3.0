@@ -18,9 +18,6 @@
 #include "cyfitter.h"
 #include "scb/cy_scb_uart.h"
 
-//added by cutworth
-#include "k_api.h"
-
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -696,10 +693,7 @@ __STATIC_INLINE uint32_t UART1_GetNumLeftToTransmit(void)
 *******************************************************************************/
 __STATIC_INLINE void UART1_Interrupt(void)
 {
-    //added interrupt entry and exit function to adapt to AliOS
-    krhino_intrpt_enter();
     Cy_SCB_UART_Interrupt(UART1_HW, &UART1_context);
-    krhino_intrpt_exit();
 }
 
 #if defined(__cplusplus)

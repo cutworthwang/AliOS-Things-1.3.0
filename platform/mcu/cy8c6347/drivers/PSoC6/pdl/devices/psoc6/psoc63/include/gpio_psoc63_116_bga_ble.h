@@ -5,12 +5,12 @@
 * PSoC 63 device GPIO header for 116-BGA-BLE package
 *
 * \note
-* Generator version: 1.2.0.115
-* Database revision: rev#1026096
+* Generator version: 1.2.0.117
+* Database revision: rev#1034984
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2017, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -34,180 +34,258 @@ enum
 /* Port List */
 /* PORT 0 (GPIO) */
 #define P0_0_PORT                       GPIO_PRT0
+#define P0_0_PIN                        0u
 #define P0_0_NUM                        0u
 #define P0_1_PORT                       GPIO_PRT0
+#define P0_1_PIN                        1u
 #define P0_1_NUM                        1u
 #define P0_2_PORT                       GPIO_PRT0
+#define P0_2_PIN                        2u
 #define P0_2_NUM                        2u
 #define P0_3_PORT                       GPIO_PRT0
+#define P0_3_PIN                        3u
 #define P0_3_NUM                        3u
 #define P0_4_PORT                       GPIO_PRT0
+#define P0_4_PIN                        4u
 #define P0_4_NUM                        4u
 #define P0_5_PORT                       GPIO_PRT0
+#define P0_5_PIN                        5u
 #define P0_5_NUM                        5u
 
 /* PORT 1 (GPIO_OVT) */
 #define P1_0_PORT                       GPIO_PRT1
+#define P1_0_PIN                        0u
 #define P1_0_NUM                        0u
 #define P1_1_PORT                       GPIO_PRT1
+#define P1_1_PIN                        1u
 #define P1_1_NUM                        1u
 #define P1_2_PORT                       GPIO_PRT1
+#define P1_2_PIN                        2u
 #define P1_2_NUM                        2u
 #define P1_3_PORT                       GPIO_PRT1
+#define P1_3_PIN                        3u
 #define P1_3_NUM                        3u
 #define P1_4_PORT                       GPIO_PRT1
+#define P1_4_PIN                        4u
 #define P1_4_NUM                        4u
 #define P1_5_PORT                       GPIO_PRT1
+#define P1_5_PIN                        5u
 #define P1_5_NUM                        5u
 
 /* PORT 5 (GPIO) */
 #define P5_0_PORT                       GPIO_PRT5
+#define P5_0_PIN                        0u
 #define P5_0_NUM                        0u
 #define P5_1_PORT                       GPIO_PRT5
+#define P5_1_PIN                        1u
 #define P5_1_NUM                        1u
 #define P5_2_PORT                       GPIO_PRT5
+#define P5_2_PIN                        2u
 #define P5_2_NUM                        2u
 #define P5_3_PORT                       GPIO_PRT5
+#define P5_3_PIN                        3u
 #define P5_3_NUM                        3u
 #define P5_4_PORT                       GPIO_PRT5
+#define P5_4_PIN                        4u
 #define P5_4_NUM                        4u
 #define P5_5_PORT                       GPIO_PRT5
+#define P5_5_PIN                        5u
 #define P5_5_NUM                        5u
 #define P5_6_PORT                       GPIO_PRT5
+#define P5_6_PIN                        6u
 #define P5_6_NUM                        6u
 
 /* PORT 6 (GPIO) */
 #define P6_0_PORT                       GPIO_PRT6
+#define P6_0_PIN                        0u
 #define P6_0_NUM                        0u
 #define P6_1_PORT                       GPIO_PRT6
+#define P6_1_PIN                        1u
 #define P6_1_NUM                        1u
 #define P6_2_PORT                       GPIO_PRT6
+#define P6_2_PIN                        2u
 #define P6_2_NUM                        2u
 #define P6_3_PORT                       GPIO_PRT6
+#define P6_3_PIN                        3u
 #define P6_3_NUM                        3u
 #define P6_4_PORT                       GPIO_PRT6
+#define P6_4_PIN                        4u
 #define P6_4_NUM                        4u
 #define P6_5_PORT                       GPIO_PRT6
+#define P6_5_PIN                        5u
 #define P6_5_NUM                        5u
 #define P6_6_PORT                       GPIO_PRT6
+#define P6_6_PIN                        6u
 #define P6_6_NUM                        6u
 #define P6_7_PORT                       GPIO_PRT6
+#define P6_7_PIN                        7u
 #define P6_7_NUM                        7u
 
 /* PORT 7 (GPIO) */
 #define P7_0_PORT                       GPIO_PRT7
+#define P7_0_PIN                        0u
 #define P7_0_NUM                        0u
 #define P7_1_PORT                       GPIO_PRT7
+#define P7_1_PIN                        1u
 #define P7_1_NUM                        1u
 #define P7_2_PORT                       GPIO_PRT7
+#define P7_2_PIN                        2u
 #define P7_2_NUM                        2u
 #define P7_3_PORT                       GPIO_PRT7
+#define P7_3_PIN                        3u
 #define P7_3_NUM                        3u
 #define P7_4_PORT                       GPIO_PRT7
+#define P7_4_PIN                        4u
 #define P7_4_NUM                        4u
 #define P7_5_PORT                       GPIO_PRT7
+#define P7_5_PIN                        5u
 #define P7_5_NUM                        5u
 #define P7_6_PORT                       GPIO_PRT7
+#define P7_6_PIN                        6u
 #define P7_6_NUM                        6u
 #define P7_7_PORT                       GPIO_PRT7
+#define P7_7_PIN                        7u
 #define P7_7_NUM                        7u
 
 /* PORT 8 (GPIO) */
 #define P8_0_PORT                       GPIO_PRT8
+#define P8_0_PIN                        0u
 #define P8_0_NUM                        0u
 #define P8_1_PORT                       GPIO_PRT8
+#define P8_1_PIN                        1u
 #define P8_1_NUM                        1u
 #define P8_2_PORT                       GPIO_PRT8
+#define P8_2_PIN                        2u
 #define P8_2_NUM                        2u
 #define P8_3_PORT                       GPIO_PRT8
+#define P8_3_PIN                        3u
 #define P8_3_NUM                        3u
 #define P8_4_PORT                       GPIO_PRT8
+#define P8_4_PIN                        4u
 #define P8_4_NUM                        4u
 #define P8_5_PORT                       GPIO_PRT8
+#define P8_5_PIN                        5u
 #define P8_5_NUM                        5u
 #define P8_6_PORT                       GPIO_PRT8
+#define P8_6_PIN                        6u
 #define P8_6_NUM                        6u
 #define P8_7_PORT                       GPIO_PRT8
+#define P8_7_PIN                        7u
 #define P8_7_NUM                        7u
 
 /* PORT 9 (GPIO) */
 #define P9_0_PORT                       GPIO_PRT9
+#define P9_0_PIN                        0u
 #define P9_0_NUM                        0u
 #define P9_1_PORT                       GPIO_PRT9
+#define P9_1_PIN                        1u
 #define P9_1_NUM                        1u
 #define P9_2_PORT                       GPIO_PRT9
+#define P9_2_PIN                        2u
 #define P9_2_NUM                        2u
 #define P9_3_PORT                       GPIO_PRT9
+#define P9_3_PIN                        3u
 #define P9_3_NUM                        3u
 #define P9_4_PORT                       GPIO_PRT9
+#define P9_4_PIN                        4u
 #define P9_4_NUM                        4u
 #define P9_5_PORT                       GPIO_PRT9
+#define P9_5_PIN                        5u
 #define P9_5_NUM                        5u
 #define P9_6_PORT                       GPIO_PRT9
+#define P9_6_PIN                        6u
 #define P9_6_NUM                        6u
 #define P9_7_PORT                       GPIO_PRT9
+#define P9_7_PIN                        7u
 #define P9_7_NUM                        7u
 
 /* PORT 10 (GPIO) */
 #define P10_0_PORT                      GPIO_PRT10
+#define P10_0_PIN                       0u
 #define P10_0_NUM                       0u
 #define P10_1_PORT                      GPIO_PRT10
+#define P10_1_PIN                       1u
 #define P10_1_NUM                       1u
 #define P10_2_PORT                      GPIO_PRT10
+#define P10_2_PIN                       2u
 #define P10_2_NUM                       2u
 #define P10_3_PORT                      GPIO_PRT10
+#define P10_3_PIN                       3u
 #define P10_3_NUM                       3u
 #define P10_4_PORT                      GPIO_PRT10
+#define P10_4_PIN                       4u
 #define P10_4_NUM                       4u
 #define P10_5_PORT                      GPIO_PRT10
+#define P10_5_PIN                       5u
 #define P10_5_NUM                       5u
 #define P10_6_PORT                      GPIO_PRT10
+#define P10_6_PIN                       6u
 #define P10_6_NUM                       6u
 
 /* PORT 11 (GPIO) */
 #define P11_0_PORT                      GPIO_PRT11
+#define P11_0_PIN                       0u
 #define P11_0_NUM                       0u
 #define P11_1_PORT                      GPIO_PRT11
+#define P11_1_PIN                       1u
 #define P11_1_NUM                       1u
 #define P11_2_PORT                      GPIO_PRT11
+#define P11_2_PIN                       2u
 #define P11_2_NUM                       2u
 #define P11_3_PORT                      GPIO_PRT11
+#define P11_3_PIN                       3u
 #define P11_3_NUM                       3u
 #define P11_4_PORT                      GPIO_PRT11
+#define P11_4_PIN                       4u
 #define P11_4_NUM                       4u
 #define P11_5_PORT                      GPIO_PRT11
+#define P11_5_PIN                       5u
 #define P11_5_NUM                       5u
 #define P11_6_PORT                      GPIO_PRT11
+#define P11_6_PIN                       6u
 #define P11_6_NUM                       6u
 #define P11_7_PORT                      GPIO_PRT11
+#define P11_7_PIN                       7u
 #define P11_7_NUM                       7u
 
 /* PORT 12 (GPIO) */
 #define P12_0_PORT                      GPIO_PRT12
+#define P12_0_PIN                       0u
 #define P12_0_NUM                       0u
 #define P12_1_PORT                      GPIO_PRT12
+#define P12_1_PIN                       1u
 #define P12_1_NUM                       1u
 #define P12_2_PORT                      GPIO_PRT12
+#define P12_2_PIN                       2u
 #define P12_2_NUM                       2u
 #define P12_3_PORT                      GPIO_PRT12
+#define P12_3_PIN                       3u
 #define P12_3_NUM                       3u
 #define P12_4_PORT                      GPIO_PRT12
+#define P12_4_PIN                       4u
 #define P12_4_NUM                       4u
 #define P12_5_PORT                      GPIO_PRT12
+#define P12_5_PIN                       5u
 #define P12_5_NUM                       5u
 #define P12_6_PORT                      GPIO_PRT12
+#define P12_6_PIN                       6u
 #define P12_6_NUM                       6u
 #define P12_7_PORT                      GPIO_PRT12
+#define P12_7_PIN                       7u
 #define P12_7_NUM                       7u
 
 /* PORT 13 (GPIO) */
 #define P13_0_PORT                      GPIO_PRT13
+#define P13_0_PIN                       0u
 #define P13_0_NUM                       0u
 #define P13_1_PORT                      GPIO_PRT13
+#define P13_1_PIN                       1u
 #define P13_1_NUM                       1u
 #define P13_6_PORT                      GPIO_PRT13
+#define P13_6_PIN                       6u
 #define P13_6_NUM                       6u
 #define P13_7_PORT                      GPIO_PRT13
+#define P13_7_PIN                       7u
 #define P13_7_NUM                       7u
 
 /* Analog Connections */

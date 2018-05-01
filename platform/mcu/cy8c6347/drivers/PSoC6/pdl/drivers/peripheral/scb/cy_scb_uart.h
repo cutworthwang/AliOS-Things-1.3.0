@@ -1,12 +1,12 @@
 /***************************************************************************//**
 * \file cy_scb_uart.h
-* \version 2.0
+* \version 2.10
 *
 * Provides UART API declarations of the SCB driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2017, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -280,6 +280,11 @@
 * \section group_scb_uart_changelog Changelog
 * <table class="doxtable">
 *   <tr><th>Version</th><th>Changes</th><th>Reason for Change</th></tr>
+*   <tr>
+*     <td>2.10</td>
+*     <td>None.</td>
+*     <td>SCB I2C driver updated.</td>
+*   </tr>
 *   <tr>
 *     <td rowspan="5">2.0</td>
 *     <td>Added parameters validation for public API.</td>
@@ -575,7 +580,7 @@ typedef struct stc_scb_uart_config
 * All fields for the context structure are internal. Firmware never reads or
 * writes these values. Firmware allocates the structure and provides the
 * address of the structure to the driver in function calls. Firmware must
-* ensure that the defined instance of this structure remains in scope while
+* ensure that the defined instance of this structure remains in scope
 * while the drive is in use.
 */
 typedef struct cy_stc_scb_uart_context

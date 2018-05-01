@@ -1,13 +1,13 @@
 /***************************************************************************//**
 * \file cy_ipc_pipe.c
-* \version 1.10
+* \version 1.10.1
 *
 *  Description:
 *   IPC Pipe Driver - This source file includes code for the Pipe layer on top
 *   of the IPC driver.
 *
 ********************************************************************************
-* Copyright 2016-2017, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -25,11 +25,16 @@ static cy_stc_ipc_pipe_ep_t * cy_ipc_pipe_epArray = NULL;
 * This function stores a copy of a pointer to the array of endpoints.  All
 * access to endpoints will be via the index of the endpoint in this array.
 *
+* \note In general case, this function is called in the default startup code,
+* so user doesn't need to call it anywhere.
+* However, it may be useful in case of some pipe customizations.
+*
 * \param theEpArray
 * This is the pointer to an array of endpoint structures that the designer
 * created and will be used to reference all endpoints.
 *
 * \funcusage
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_myIpcPipeEpArray
 * \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Pipe_Config
 *
 *******************************************************************************/
@@ -49,10 +54,16 @@ void Cy_IPC_Pipe_Config(cy_stc_ipc_pipe_ep_t * theEpArray)
 * Initializes the system pipes. The system pipes are used by BLE.
 * \note The function should be called on all CPUs.
 *
+* \note In general case, this function is called in the default startup code,
+* so user doesn't need to call it anywhere.
+* However, it may be useful in case of some pipe customizations.
+*
 * \param config
 * This is the pointer to the pipe configuration structure
 *
 * \funcusage
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_myIpcPipeCbArray
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_myIpcPipeEpConfig
 * \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Pipe_Init
 *
 *******************************************************************************/
@@ -129,6 +140,10 @@ void Cy_IPC_Pipe_Init(cy_stc_ipc_pipe_config_t const *config)
 * with the callback functions for that endpoint using the
 * Cy_IPC_Pipe_RegisterCallback() function.
 *
+* \note In general case, this function is called within \ref Cy_IPC_Pipe_Init,
+* so user doesn't need to call it anywhere.
+* However, it may be useful in case of some pipe/endpoint customizations.
+*
 * \param epAddr
 * This parameter is the address (or index in the array of endpoint structures)
 * that designates the endpoint you want to initialize.
@@ -152,6 +167,8 @@ void Cy_IPC_Pipe_Init(cy_stc_ipc_pipe_config_t const *config)
 * This is a pointer to the endpoint interrupt description structure.
 *
 * \funcusage
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_myIpcPipeCbArray
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_myIpcPipeEpConfig
 * \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Pipe_EndpointInit
 *
 *******************************************************************************/
@@ -322,7 +339,7 @@ cy_en_ipc_pipe_status_t Cy_IPC_Pipe_SendMessage(uint32_t toAddr, uint32_t fromAd
 *    CY_IPC_PIPE_ERROR_BAD_CLIENT:  Client ID out of range, callback not registered.
 *
 * \funcusage
-* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_myNotifyCallback
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_myAcquireCallback
 * \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Pipe_RegisterCallback
 *
 *******************************************************************************/
@@ -400,6 +417,7 @@ void Cy_IPC_Pipe_RegisterCallbackRel(uint32_t epAddr, cy_ipc_pipe_relcallback_pt
 *  None
 *
 * \funcusage
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_myIpcPipeEpArray
 * \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Pipe_ExecCallback
 *
 *******************************************************************************/

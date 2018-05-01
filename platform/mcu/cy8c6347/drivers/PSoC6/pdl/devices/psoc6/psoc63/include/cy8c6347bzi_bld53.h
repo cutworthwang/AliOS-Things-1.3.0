@@ -5,12 +5,12 @@
 * CY8C6347BZI-BLD53 device header
 *
 * \note
-* Generator version: 1.2.0.115
-* Database revision: rev#1026096
+* Generator version: 1.2.0.117
+* Database revision: rev#1034984
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2017, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -1260,15 +1260,19 @@ typedef enum {
 *                                     I2S
 *******************************************************************************/
 
-#define I2S_BASE                                0x42A10000UL
-#define I2S                                     ((I2S_Type*) I2S_BASE)                                            /* 0x42A10000 */
+#define I2S0_BASE                               0x42A10000UL
+#define I2S0                                    ((I2S_Type*) I2S0_BASE)                                           /* 0x42A10000 */
 
 /*******************************************************************************
 *                                     PDM
 *******************************************************************************/
 
-#define PDM_BASE                                0x42A20000UL
-#define PDM                                     ((PDM_Type*) PDM_BASE)                                            /* 0x42A20000 */
+#define PDM0_BASE                               0x42A20000UL
+#define PDM0                                    ((PDM_Type*) PDM0_BASE)                                           /* 0x42A20000 */
+
+/* Backward compabitility definitions */
+#define I2S                                     I2S0
+#define PDM                                     PDM0
 
 /** \} CY8C6347BZI-BLD53 */
 

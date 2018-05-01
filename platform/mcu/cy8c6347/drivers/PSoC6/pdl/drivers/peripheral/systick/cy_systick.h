@@ -1,12 +1,12 @@
 /***************************************************************************//**
 * \file cy_systick.h
-* \version 1.0
+* \version 1.0.1
 *
 * Provides the API declarations of the SysTick driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2017, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.

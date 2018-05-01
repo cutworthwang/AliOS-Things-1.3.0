@@ -1,12 +1,12 @@
 /***************************************************************************//**
 * \file cy_ipc_drv.h
-* \version 1.10
+* \version 1.10.1
 *
 * Provides an API declaration of the IPC driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2017, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -238,6 +238,14 @@
 * <table class="doxtable">
 *   <tr><th>Version</th><th>Changes</th><th>Reason for Change</th></tr>
 *   <tr>
+*     <td>1.10.1</td>
+*     <td>Updated description of the \ref Cy_IPC_Pipe_Init,  
+*         \ref Cy_IPC_Pipe_EndpointInit, \ref Cy_IPC_Sema_Set functions.
+*         Added / updated code snippets.
+*     </td>
+*     <td>Documentation update and clarification</td>
+*   </tr>
+*   <tr>
 *     <td>1.10</td>
 *     <td>Added support for more IPC structures</td>
 *     <td>New device support</td>
@@ -397,8 +405,7 @@ __STATIC_INLINE void     Cy_IPC_Drv_ClearInterrupt (IPC_INTR_STRUCT_Type * base,
 * Returns a pointer to the base of the IPC registers.
 *
 * \funcusage
-* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_myIpc
-* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Drv_GetIpcBaseAddress
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Drv_SendMsgWord
 *
 *******************************************************************************/
 __STATIC_INLINE IPC_STRUCT_Type* Cy_IPC_Drv_GetIpcBaseAddress (uint32_t ipcIndex)
@@ -425,8 +432,7 @@ __STATIC_INLINE IPC_STRUCT_Type* Cy_IPC_Drv_GetIpcBaseAddress (uint32_t ipcIndex
 * Returns a pointer to the base of the IPC interrupt registers.
 *
 * \funcusage
-* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_myIpcIntr
-* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Drv_GetIntrBaseAddr
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Drv_GetInterruptStatus
 *
 *******************************************************************************/
 __STATIC_INLINE IPC_INTR_STRUCT_Type* Cy_IPC_Drv_GetIntrBaseAddr (uint32_t ipcIntrIndex)
@@ -455,7 +461,7 @@ __STATIC_INLINE IPC_INTR_STRUCT_Type* Cy_IPC_Drv_GetIntrBaseAddr (uint32_t ipcIn
 * notify event.
 *
 * \funcusage
-* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Drv_SetInterruptMask
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Drv_GetInterruptStatusMasked
 *
 *******************************************************************************/
 __STATIC_INLINE void  Cy_IPC_Drv_SetInterruptMask (IPC_INTR_STRUCT_Type* base,
@@ -487,7 +493,7 @@ __STATIC_INLINE void  Cy_IPC_Drv_SetInterruptMask (IPC_INTR_STRUCT_Type* base,
 *   </table>
 *
 * \funcusage
-* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Drv_GetInterruptMask
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Drv_GetInterruptStatusMasked
 *
 *******************************************************************************/
 __STATIC_INLINE uint32_t Cy_IPC_Drv_GetInterruptMask(IPC_INTR_STRUCT_Type const * base)
@@ -640,7 +646,7 @@ __STATIC_INLINE void  Cy_IPC_Drv_ClearInterrupt(IPC_INTR_STRUCT_Type* base, uint
 * structure.
 *
 * \funcusage
-* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Drv_AcquireNotify
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Drv_LockAcquire
 *
 *******************************************************************************/
 __STATIC_INLINE void  Cy_IPC_Drv_AcquireNotify (IPC_STRUCT_Type* base, uint32_t notifyEventIntr)
@@ -663,6 +669,9 @@ __STATIC_INLINE void  Cy_IPC_Drv_AcquireNotify (IPC_STRUCT_Type* base, uint32_t 
 *
 * \param notifyEventIntr
 * Bit encoded list of IPC interrupt lines that are triggered by a notification.
+*
+* \funcusage
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Drv_ReadMsgWord
 *
 *******************************************************************************/
 __STATIC_INLINE void  Cy_IPC_Drv_ReleaseNotify (IPC_STRUCT_Type* base, uint32_t notifyEventIntr)
@@ -738,7 +747,7 @@ __STATIC_INLINE uint32_t Cy_IPC_Drv_ReadDataValue (IPC_STRUCT_Type const * base)
 *   false: The IPC channel is in the Released state.
 *
 * \funcusage
-* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Drv_IsLockAcquired
+* \snippet IPC_sut_01.cydsn/main_cm4.c snippet_Cy_IPC_Drv_LockAcquire
 *
 *******************************************************************************/
 __STATIC_INLINE bool Cy_IPC_Drv_IsLockAcquired (IPC_STRUCT_Type const * base)

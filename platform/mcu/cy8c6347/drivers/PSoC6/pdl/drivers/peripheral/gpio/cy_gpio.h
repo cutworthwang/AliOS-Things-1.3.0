@@ -1,13 +1,13 @@
 /***************************************************************************//**
 * \file cy_gpio.h
-* \version 1.10
+* \version 1.10.1
 *
 * \brief
 * Provides an API declaration of the GPIO driver
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2017, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -86,6 +86,14 @@
 * \section group_gpio_changelog Changelog
 * <table class="doxtable">
 *   <tr><th>Version</th><th>Changes</th><th>Reason for Change</th></tr>
+*   <tr>
+*     <td>1.10.1</td>
+*     <td>Updated description for the functions: \ref Cy_GPIO_GetInterruptStatus, 
+*         \ref Cy_GPIO_GetInterruptMask, \ref Cy_GPIO_GetInterruptStatusMasked.
+*         Minor documentation edits.
+*     </td>
+*     <td>Documentation update and clarification</td>
+*   </tr>
 *   <tr>
 *     <td>1.10</td>
 *     <td>Added input parameter validation to the API functions</td>
@@ -1509,7 +1517,11 @@ __STATIC_INLINE uint32_t Cy_GPIO_GetVohSel(GPIO_PRT_Type* base, uint32_t pinNum)
 * Function Name: Cy_GPIO_GetInterruptStatus
 ****************************************************************************//**
 *
-* \brief Return the current interrupt state of the pin.
+* \brief Returns the current unmasked interrupt state of the pin.
+*
+* The core processor's NVIC is triggered by the masked interrupt bits. This 
+* function allows reading the unmasked interrupt state. Whether the bit
+* positions actually trigger the interrupt are defined by the interrupt mask bits.
 *
 * \param base
 * Pointer to the pin's port register base address
@@ -1612,8 +1624,10 @@ __STATIC_INLINE void Cy_GPIO_SetInterruptMask(GPIO_PRT_Type* base, uint32_t pinN
 * Function Name: Cy_GPIO_GetInterruptMask
 ****************************************************************************//**
 *
-* \brief Returns the state of the pin interrupt mask to determine whether it is
-* configured to be forwarded to the CPU interrupt controller.
+* \brief Returns the state of the pin interrupt mask.
+*
+* This mask is used to determine whether the pin is configured to be forwarded
+* to the CPU NVIC.
 *
 * \param base
 * Pointer to the pin's port register base address
@@ -1643,6 +1657,10 @@ __STATIC_INLINE uint32_t Cy_GPIO_GetInterruptMask(GPIO_PRT_Type* base, uint32_t 
 ****************************************************************************//**
 *
 * \brief Return the pin's current interrupt state after being masked.
+*
+* The core processor's NVIC is triggered by the masked interrupt bits. This 
+* function allows reading this masked interrupt state. Note that the bits that
+* are not masked will not be forwarded to the NVIC.
 *
 * \param base
 * Pointer to the pin's port register base address

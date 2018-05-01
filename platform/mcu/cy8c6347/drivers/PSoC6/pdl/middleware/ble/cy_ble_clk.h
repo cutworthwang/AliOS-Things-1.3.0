@@ -7,7 +7,7 @@
 *
 ********************************************************************************
 * \copyright
-* Copyright 2017, Cypress Semiconductor Corporation.  All rights reserved.
+* Copyright 2017-2018, Cypress Semiconductor Corporation.  All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -20,6 +20,9 @@
 #include "gpio/cy_gpio.h"
 #include "syslib/cy_syslib.h"
 #include <stddef.h>
+    
+#include "cy_ble_config.h"
+
 
 /* C binding of definitions if building with C++ compiler */
 #ifdef __cplusplus
@@ -41,27 +44,73 @@ extern "C" {
 #define CY_BLE_PORT4_HSIOM_SEL0                              (0x1C001A1Au)
 #define CY_BLE_PORT4_HSIOM_SEL1                              (0x00000000u)
 
-#define CY_BLE_DEFAULT_OSC_STARTUP_DELAY_LF                  (25u)
-#define CY_BLE_DEFAULT_CAP_TRIM_VALUE                        (32u)
-#define CY_BLE_DEFAULT_ECO_FREQ                              (CY_BLE_BLESS_ECO_FREQ_32MHZ)
-#define CY_BLE_DEFAULT_ECO_DIV                               (CY_BLE_SYS_ECO_CLK_DIV_4)
+#if !defined (CY_BLE_DEFAULT_OSC_STARTUP_DELAY_LF)
+    #define CY_BLE_DEFAULT_OSC_STARTUP_DELAY_LF              (25u)
+#endif /* CY_BLE_DEFAULT_OSC_STARTUP_DELAY_LF */
+ 
+#if !defined (CY_BLE_DEFAULT_CAP_TRIM_VALUE)    
+    #define CY_BLE_DEFAULT_CAP_TRIM_VALUE                    (32u)
+#endif /* CY_BLE_DEFAULT_CAP_TRIM_VALUE */
 
-#define CY_BLE_DEFAULT_HVLDO_STARTUP_DELAY                   (6UL)
-#define CY_BLE_DEFAULT_ISOLATE_DEASSERT_DELAY                (0UL)
-#define CY_BLE_DEFAULT_ACT_TO_SWITCH_DELAY                   (0UL)
-#define CY_BLE_DEFAULT_HVLDO_DISABLE_DELAY                   (1UL)
+#if !defined (CY_BLE_DEFAULT_ECO_FREQ)       
+   #define CY_BLE_DEFAULT_ECO_FREQ                           (CY_BLE_BLESS_ECO_FREQ_32MHZ)
+#endif /* CY_BLE_DEFAULT_ECO_FREQ */
 
-#define CY_BLE_DEFAULT_ACT_STARTUP_DELAY                     (4UL)
-#define CY_BLE_DEFAULT_DIG_LDO_STARTUP_DELAY                 (0UL)
+#if !defined (CY_BLE_DEFAULT_ECO_DIV)  
+    #define CY_BLE_DEFAULT_ECO_DIV                           (CY_BLE_SYS_ECO_CLK_DIV_4)
+#endif /* CY_BLE_DEFAULT_ECO_DIV */
 
-#define CY_BLE_DEFAULT_XTAL_DISABLE_DELAY                    (1UL)
-#define CY_BLE_DEFAULT_DIG_LDO_DISABLE_DELAY                 (0UL)
-#define CY_BLE_DEFAULT_VDDR_STABLE_DELAY                     (1UL)
+#if !defined (CY_BLE_DEFAULT_HVLDO_STARTUP_DELAY)
+    #define CY_BLE_DEFAULT_HVLDO_STARTUP_DELAY               (6UL)
+#endif /* CY_BLE_DEFAULT_HVLDO_STARTUP_DELAY */
 
-#define CY_BLE_DEFAULT_RCB_CTRL_LEAD                         (0x2UL)
-#define CY_BLE_DEFAULT_RCB_CTRL_LAG                          (0x2UL)
-#define CY_BLE_DEFAULT_RCB_CTRL_DIV                          (0x1UL)     /* LL 8 MHz / 2 */
-#define CY_BLE_DEFAULT_RCB_CTRL_FREQ                         (4000000UL) /* Default RCB clock is 4 MHz */
+#if !defined (CY_BLE_DEFAULT_ISOLATE_DEASSERT_DELAY)
+    #define CY_BLE_DEFAULT_ISOLATE_DEASSERT_DELAY            (0UL)
+#endif /* CY_BLE_DEFAULT_ISOLATE_DEASSERT_DELAY */
+
+#if !defined (CY_BLE_DEFAULT_ACT_TO_SWITCH_DELAY)
+    #define CY_BLE_DEFAULT_ACT_TO_SWITCH_DELAY               (0UL)
+#endif /* CY_BLE_DEFAULT_ACT_TO_SWITCH_DELAY */
+
+#if !defined (CY_BLE_DEFAULT_HVLDO_DISABLE_DELAY)    
+    #define CY_BLE_DEFAULT_HVLDO_DISABLE_DELAY               (1UL)
+#endif /* CY_BLE_DEFAULT_HVLDO_DISABLE_DELAY */
+
+#if !defined (CY_BLE_DEFAULT_ACT_STARTUP_DELAY)
+    #define CY_BLE_DEFAULT_ACT_STARTUP_DELAY                 (4UL)
+#endif /* CY_BLE_DEFAULT_ACT_STARTUP_DELAY */
+
+#if !defined (CY_BLE_DEFAULT_DIG_LDO_STARTUP_DELAY)
+    #define CY_BLE_DEFAULT_DIG_LDO_STARTUP_DELAY             (0UL)
+#endif /* CY_BLE_DEFAULT_DIG_LDO_STARTUP_DELAY */
+
+#if !defined (CY_BLE_DEFAULT_XTAL_DISABLE_DELAY)
+    #define CY_BLE_DEFAULT_XTAL_DISABLE_DELAY                (1UL)
+#endif /* CY_BLE_DEFAULT_XTAL_DISABLE_DELAY */
+
+#if !defined (CY_BLE_DEFAULT_DIG_LDO_DISABLE_DELAY)
+    #define CY_BLE_DEFAULT_DIG_LDO_DISABLE_DELAY             (0UL)
+#endif /* CY_BLE_DEFAULT_DIG_LDO_DISABLE_DELAY */
+
+#if !defined (CY_BLE_DEFAULT_VDDR_STABLE_DELAY)
+    #define CY_BLE_DEFAULT_VDDR_STABLE_DELAY                 (1UL)
+#endif /* CY_BLE_DEFAULT_VDDR_STABLE_DELAY */
+
+#if !defined (CY_BLE_DEFAULT_RCB_CTRL_LEAD)
+    #define CY_BLE_DEFAULT_RCB_CTRL_LEAD                     (0x2UL)
+#endif /* CY_BLE_DEFAULT_RCB_CTRL_LEAD */
+
+#if !defined (CY_BLE_DEFAULT_RCB_CTRL_LAG)
+    #define CY_BLE_DEFAULT_RCB_CTRL_LAG                      (0x2UL)
+#endif /* CY_BLE_DEFAULT_RCB_CTRL_LAG */
+
+#if !defined (CY_BLE_DEFAULT_RCB_CTRL_DIV)
+    #define CY_BLE_DEFAULT_RCB_CTRL_DIV                      (0x1UL)     /* LL 8 MHz / 2 */
+#endif /* CY_BLE_DEFAULT_RCB_CTRL_DIV */
+
+#if !defined (CY_BLE_DEFAULT_RCB_CTRL_FREQ)
+    #define CY_BLE_DEFAULT_RCB_CTRL_FREQ                     (4000000UL) /* Default RCB clock is 4 MHz */
+#endif /* CY_BLE_DEFAULT_RCB_CTRL_FREQ */
 
 #define CY_BLE_DEFAULT_ECO_CLK_FREQ_32MHZ                    (32000000UL)
 #define CY_BLE_DEFAULT_ECO_CLK_FREQ_16MHZ                    (16000000UL)
@@ -105,16 +154,27 @@ extern "C" {
 #define CY_BLE_RF_LDO_EN_REG_LDO_RF_CFG_SHIFT                (6u)
 #define CY_BLE_RF_LDO_EN_REG_LDO_RF_CFG_MASK                 ((1<<2)-1)
 
+#if !defined (CY_BLE_DELAY_TIME)
+    #define CY_BLE_DELAY_TIME                                (1u) /* in us */
+#endif /* CY_BLE_DELAY_TIME */
 
+#if !defined (CY_BLE_RCB_TIMEOUT)    
+    #define CY_BLE_RCB_TIMEOUT                               (1000u / CY_BLE_DELAY_TIME)   /* 1ms */
+#endif /* CY_BLE_RCB_TIMEOUT */
 
-#define CY_BLE_DELAY_TIME                                    (1u) /* in us */
-#define CY_BLE_RCB_TIMEOUT                                   (1000u / CY_BLE_DELAY_TIME)   /* 1ms */
-#define CY_BLE_VIO_TIMEOUT                                   (2000u / CY_BLE_DELAY_TIME)   /* 2ms */
-#define CY_BLE_ACT_TIMEOUT                                   (950000u / CY_BLE_DELAY_TIME) /* 950ms */
-#define CY_BLE_RCB_RETRIES                                   (10u)
+#if !defined (CY_BLE_VIO_TIMEOUT)    
+    #define CY_BLE_VIO_TIMEOUT                               (2000u / CY_BLE_DELAY_TIME)   /* 2ms */
+#endif /* CY_BLE_VIO_TIMEOUT */
 
+#if !defined (CY_BLE_ACT_TIMEOUT)    
+    #define CY_BLE_ACT_TIMEOUT                               (950000u / CY_BLE_DELAY_TIME) /* 950ms */
+#endif /* CY_BLE_ACT_TIMEOUT */
 
+#if !defined (CY_BLE_RCB_RETRIES)    
+    #define CY_BLE_RCB_RETRIES                               (10u)
+#endif /* CY_BLE_RCB_RETRIES */
 
+#define CY_BLE_ECO_SET_TRIM_DELAY_COEF                       (32u)
 /**
  * \addtogroup group_ble_clock_api_data_types
  * @{
@@ -200,13 +260,12 @@ typedef enum
     
 } cy_en_ble_eco_status_t;
 
-
 /** BLE ECO configuration parameters */
 typedef struct
 {
     /** ECO crystal startup time in multiple of 31.25us (startup_time_from_user min - 31.25us)
      * ecoXtalStartUpTime = startup_time_from_user/31.25 */
-    uint8_t ecoXtalStartUpTime;
+    uint8_t                           ecoXtalStartUpTime;
 
     /** ECO crystal load capacitance - In multiple of 0.075pF (pF_from_user min - 7.5pF, pF_from_user max - 26.625pF)
      * loadcap = ((pF_from_user - 7.5)/0.075) */

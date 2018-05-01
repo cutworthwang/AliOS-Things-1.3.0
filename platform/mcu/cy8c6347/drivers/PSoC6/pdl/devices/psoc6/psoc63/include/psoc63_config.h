@@ -5,12 +5,12 @@
 * PSoC 63 device configuration header
 *
 * \note
-* Generator version: 1.2.0.115
-* Database revision: rev#1026096
+* Generator version: 1.2.0.117
+* Database revision: rev#1034984
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2017, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -1617,8 +1617,6 @@ typedef enum
 #define SRSS_HARD_ECOMUX_PRESENT        1u
 /* ALTHF mux is present in hardened clkactfllmux block (Must be >= ALTHF_PRESENT) */
 #define SRSS_HARD_ALTHFMUX_PRESENT      1u
-/* Width of MCWDT Subcounters 0 and 1. Applies to all MCWDT. */
-#define SRSS_MCWDT_CTR_WIDTH            32u
 /* Low-current buck regulator present. Can be derived from S40S_SISOBUCKLC_PRESENT
    or SIMOBUCK_PRESENT. */
 #define SRSS_BUCKCTL_PRESENT            1u
@@ -2993,10 +2991,10 @@ typedef enum
 #define CY_MMIO_SCB8_SLAVE_NR           9u
 #define CY_MMIO_PASS_GROUP_NR           9u
 #define CY_MMIO_PASS_SLAVE_NR           1u
-#define CY_MMIO_I2S_GROUP_NR            10u
-#define CY_MMIO_I2S_SLAVE_NR            1u
-#define CY_MMIO_PDM_GROUP_NR            10u
-#define CY_MMIO_PDM_SLAVE_NR            2u
+#define CY_MMIO_I2S0_GROUP_NR           10u
+#define CY_MMIO_I2S0_SLAVE_NR           1u
+#define CY_MMIO_PDM0_GROUP_NR           10u
+#define CY_MMIO_PDM0_SLAVE_NR           2u
 
 #endif /* _PSOC63_CONFIG_H_ */
 

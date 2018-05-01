@@ -5,12 +5,12 @@
 * Common header file to be included by the drivers.
 *
 * \note
-* Generator version: 1.2.0.115
-* Database revision: rev#1026096
+* Generator version: 1.2.0.117
+* Database revision: rev#1034984
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2017, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -59,6 +59,8 @@
     #include "cy8c6347bzi_bud33.h"
 #elif defined (CY8C6347BZI_BUD53)
     #include "cy8c6347bzi_bud53.h"
+#elif defined (CY8C6337BZI_BLF13)
+    #include "cy8c6337bzi_blf13.h"
 #else
     #error Undefined part number
 #endif

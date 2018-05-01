@@ -1,12 +1,12 @@
 /***************************************************************************//**
 * \file cy_syslib.c
-* \version 2.0
+* \version 2.0.1
 *
 *  Description:
-*   Provides system API implementation for the syslib driver.
+*   Provides system API implementation for the SysLib driver.
 *
 ********************************************************************************
-* Copyright 2016-2017, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -540,7 +540,7 @@ __WEAK void Cy_SysLib_ProcessingFault(void)
 * \note Refer to the device TRM for the low power modes description.
 *
 * \param clkHfMHz  The HFClk0 clock frequency in MHz. Specifying a frequency
-*                  above the supported maximum will set the Wait states as for
+*                  above the supported maximum will set the wait states as for
 *                  the maximum frequency.
 *
 *******************************************************************************/

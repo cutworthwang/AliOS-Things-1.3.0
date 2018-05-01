@@ -1,12 +1,12 @@
 /***************************************************************************//**
 * \file cy_lvd.h
-* \version 1.0
+* \version 1.0.1
 * 
 * The header file of the LVD driver.
 *
 ********************************************************************************
 * \copyright
-* Copyright 2017, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2017-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -84,6 +84,11 @@
 * <table class="doxtable">
 *   <tr><th>Version</th><th>Changes</th><th>Reason of Change</th></tr>
 *   <tr>
+*     <td>1.0.1</td>
+*     <td>Added Low Power Callback section</td>
+*     <td>Documentation update and clarification</td>
+*   </tr>
+*   <tr>
 *     <td>1.0</td>
 *     <td>Initial Version</td>
 *     <td></td>
@@ -92,6 +97,9 @@
 *
 * \defgroup group_lvd_macros Macros
 * \defgroup group_lvd_functions Functions
+*   \{
+*       \defgroup group_lvd_functions_syspm_callback  Low Power Callback
+*   \}
 * \defgroup group_lvd_enums Enumerated Types
 */
 
@@ -217,8 +225,12 @@ __STATIC_INLINE void Cy_LVD_SetInterruptMask(void);
 __STATIC_INLINE void Cy_LVD_ClearInterruptMask(void);
 __STATIC_INLINE uint32_t Cy_LVD_GetInterruptStatusMasked(void);
 __STATIC_INLINE void Cy_LVD_SetInterruptConfig(cy_en_lvd_intr_config_t lvdInterruptConfig);
+/** \addtogroup group_lvd_functions_syspm_callback
+* The driver supports SysPm callback for Deep Sleep transition.
+* \{
+*/
 cy_en_syspm_status_t Cy_LVD_DeepSleepCallback(cy_stc_syspm_callback_params_t * callbackParams);
-
+/** \} */
 
 /*******************************************************************************
 * Function Name: Cy_LVD_Enable

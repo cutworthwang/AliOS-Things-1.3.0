@@ -5,12 +5,12 @@
 * SFLASH IP definitions
 *
 * \note
-* Generator version: 1.2.0.115
-* Database revision: rev#1026096
+* Generator version: 1.2.0.117
+* Database revision: rev#1034984
 *
 ********************************************************************************
 * \copyright
-* Copyright 2016-2017, Cypress Semiconductor Corporation. All rights reserved.
+* Copyright 2016-2018, Cypress Semiconductor Corporation. All rights reserved.
 * You may use this file only in accordance with the license, terms, conditions,
 * disclaimers, and limitations in the end user license agreement accompanying
 * the software package with which this file was provided.
@@ -76,7 +76,11 @@ typedef struct {
   __IOM uint32_t PWR_TRIM_WAKE_CTL;             /*!< 0x00001810 Wakeup delay */
    __IM uint16_t RESERVED10;
   __IOM uint16_t RADIO_LDO_TRIMS;               /*!< 0x00001816 Radio LDO Trims */
-   __IM uint32_t RESERVED11[506];
+  __IOM uint32_t CPUSS_TRIM_ROM_CTL_ULP;        /*!< 0x00001818 CPUSS TRIM ROM CTL ULP value */
+  __IOM uint32_t CPUSS_TRIM_RAM_CTL_ULP;        /*!< 0x0000181C CPUSS TRIM RAM CTL ULP value */
+  __IOM uint32_t CPUSS_TRIM_ROM_CTL_LP;         /*!< 0x00001820 CPUSS TRIM ROM CTL LP value */
+  __IOM uint32_t CPUSS_TRIM_RAM_CTL_LP;         /*!< 0x00001824 CPUSS TRIM RAM CTL LP value */
+   __IM uint32_t RESERVED11[502];
   __IOM uint32_t FLASH_BOOT_OBJECT_SIZE;        /*!< 0x00002000 Flash Boot - Object Size */
   __IOM uint32_t FLASH_BOOT_APP_ID;             /*!< 0x00002004 Flash Boot - Application ID/Version */
   __IOM uint32_t FLASH_BOOT_ATTRIBUTE;          /*!< 0x00002008 N/A */
@@ -87,7 +91,8 @@ typedef struct {
   __IOM uint8_t  FLASH_BOOT_CODE[8488];         /*!< 0x000020D8 Flash Boot - Code and Data */
    __IM uint32_t RESERVED13[1536];
   __IOM uint8_t  PUBLIC_KEY[3072];              /*!< 0x00005A00 Public key for signature verification (max RSA key size 4096) */
-   __IM uint32_t RESERVED14[1152];
+  __IOM uint32_t BOOT_PROT_SETTINGS[384];       /*!< 0x00006600 Boot protection settings (not present in PSOC6ABLE2) */
+   __IM uint32_t RESERVED14[768];
   __IOM uint32_t TOC1_OBJECT_SIZE;              /*!< 0x00007800 Object size in bytes for CRC calculation starting from offset
                                                                 0x00 */
   __IOM uint32_t TOC1_MAGIC_NUMBER;             /*!< 0x00007804 Magic number(0x01211219) */
@@ -97,7 +102,8 @@ typedef struct {
   __IOM uint32_t TOC1_UNIQUE_ID_ADDR;           /*!< 0x00007810 Address of Unique ID stored in SFLASH */
   __IOM uint32_t TOC1_FB_OBJECT_ADDR;           /*!< 0x00007814 Addresss of FLASH Boot(FB) object that include FLASH patch also */
   __IOM uint32_t TOC1_SYSCALL_TABLE_ADDR;       /*!< 0x00007818 Address of SYSCALL_TABLE entry in SFLASH */
-   __IM uint32_t RESERVED15[120];
+  __IOM uint32_t TOC1_BOOT_PROTECTION_ADDR;     /*!< 0x0000781C Address of boot protection object */
+   __IM uint32_t RESERVED15[119];
   __IOM uint32_t TOC1_CRC_ADDR;                 /*!< 0x000079FC Upper 2 bytes contain CRC16-CCITT and lower 2 bytes are 0 */
   __IOM uint32_t RTOC1_OBJECT_SIZE;             /*!< 0x00007A00 Redundant Object size in bytes for CRC calculation starting
                                                                 from offset 0x00 */
@@ -279,6 +285,18 @@ typedef struct {
 #define SFLASH_RADIO_LDO_TRIMS_LDO_IF_Msk       0xC0UL
 #define SFLASH_RADIO_LDO_TRIMS_LDO_DIG_Pos      8UL
 #define SFLASH_RADIO_LDO_TRIMS_LDO_DIG_Msk      0x300UL
+/* SFLASH.CPUSS_TRIM_ROM_CTL_ULP */
+#define SFLASH_CPUSS_TRIM_ROM_CTL_ULP_DATA32_Pos 0UL
+#define SFLASH_CPUSS_TRIM_ROM_CTL_ULP_DATA32_Msk 0xFFFFFFFFUL
+/* SFLASH.CPUSS_TRIM_RAM_CTL_ULP */
+#define SFLASH_CPUSS_TRIM_RAM_CTL_ULP_DATA32_Pos 0UL
+#define SFLASH_CPUSS_TRIM_RAM_CTL_ULP_DATA32_Msk 0xFFFFFFFFUL
+/* SFLASH.CPUSS_TRIM_ROM_CTL_LP */
+#define SFLASH_CPUSS_TRIM_ROM_CTL_LP_DATA32_Pos 0UL
+#define SFLASH_CPUSS_TRIM_ROM_CTL_LP_DATA32_Msk 0xFFFFFFFFUL
+/* SFLASH.CPUSS_TRIM_RAM_CTL_LP */
+#define SFLASH_CPUSS_TRIM_RAM_CTL_LP_DATA32_Pos 0UL
+#define SFLASH_CPUSS_TRIM_RAM_CTL_LP_DATA32_Msk 0xFFFFFFFFUL
 /* SFLASH.FLASH_BOOT_OBJECT_SIZE */
 #define SFLASH_FLASH_BOOT_OBJECT_SIZE_DATA32_Pos 0UL
 #define SFLASH_FLASH_BOOT_OBJECT_SIZE_DATA32_Msk 0xFFFFFFFFUL
@@ -307,6 +325,9 @@ typedef struct {
 /* SFLASH.PUBLIC_KEY */
 #define SFLASH_PUBLIC_KEY_DATA_Pos              0UL
 #define SFLASH_PUBLIC_KEY_DATA_Msk              0xFFUL
+/* SFLASH.BOOT_PROT_SETTINGS */
+#define SFLASH_BOOT_PROT_SETTINGS_DATA32_Pos    0UL
+#define SFLASH_BOOT_PROT_SETTINGS_DATA32_Msk    0xFFFFFFFFUL
 /* SFLASH.TOC1_OBJECT_SIZE */
 #define SFLASH_TOC1_OBJECT_SIZE_DATA32_Pos      0UL
 #define SFLASH_TOC1_OBJECT_SIZE_DATA32_Msk      0xFFFFFFFFUL
@@ -328,6 +349,9 @@ typedef struct {
 /* SFLASH.TOC1_SYSCALL_TABLE_ADDR */
 #define SFLASH_TOC1_SYSCALL_TABLE_ADDR_DATA32_Pos 0UL
 #define SFLASH_TOC1_SYSCALL_TABLE_ADDR_DATA32_Msk 0xFFFFFFFFUL
+/* SFLASH.TOC1_BOOT_PROTECTION_ADDR */
+#define SFLASH_TOC1_BOOT_PROTECTION_ADDR_DATA32_Pos 0UL
+#define SFLASH_TOC1_BOOT_PROTECTION_ADDR_DATA32_Msk 0xFFFFFFFFUL
 /* SFLASH.TOC1_CRC_ADDR */
 #define SFLASH_TOC1_CRC_ADDR_DATA32_Pos         0UL
 #define SFLASH_TOC1_CRC_ADDR_DATA32_Msk         0xFFFFFFFFUL
