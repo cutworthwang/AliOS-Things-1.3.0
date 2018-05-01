@@ -112,11 +112,11 @@ GETCHAR_PROTOTYPE
 {
   /* Place your implementation of fgetc here */
   /* e.g. readwrite a character to the USART2 and Loop until the end of transmission */
-  uint8_t ch = 0;
-  uint32_t recv_size;
+    uint8_t ch = 0;
+    uint32_t recv_size;
 	int32_t ret = 0;
 	
-  ret = hal_uart_recv_II(&console_uart, &ch, 1, &recv_size, HAL_WAIT_FOREVER);
+    ret = hal_uart_recv_II(&console_uart, &ch, 1, &recv_size, HAL_WAIT_FOREVER);
 	
 	if(ret == 0)
 	{
@@ -263,30 +263,29 @@ int32_t hal_uart_init(uart_dev_t *uart)
     switch(uart->port)
     {        
         case UART1:
-			  aos_sem_new(&scb1_tx_sema,0);
-				aos_mutex_new(&scb1_tx_mutex);
-        aos_mutex_new(&scb1_rx_mutex);
         UART1_Start();
         Cy_SCB_UART_RegisterCallback(SCB1, scb1_callback, &UART1_context);
         if(krhino_buf_queue_create(&g_buf_queue_uart[0], g_pc_buf_queue_name[0], g_buf_uart[0], MAX_BUF_UART_BYTES, 1) != 0){
             return -2;
         }
-				memset(g_buf_uart[0], 0, MAX_BUF_UART_BYTES);
+        memset(g_buf_uart[0], 0, MAX_BUF_UART_BYTES);
         UART1_context.buffer_queue = &g_buf_queue_uart[0];
+        aos_sem_new(&scb1_tx_sema,0);
+        aos_mutex_new(&scb1_tx_mutex);
+        aos_mutex_new(&scb1_rx_mutex);
         break;
         
         case UART5:
-				aos_sem_new(&scb5_tx_sema,0);
-        aos_mutex_new(&scb5_tx_mutex);
-        aos_mutex_new(&scb5_rx_mutex);
         UART5_Start();
         Cy_SCB_UART_RegisterCallback(SCB5, scb5_callback, &UART5_context);
         if(krhino_buf_queue_create(&g_buf_queue_uart[1], g_pc_buf_queue_name[1], g_buf_uart[1], MAX_BUF_UART_BYTES, 1) != 0){
             return -2;
         }
-				memset(g_buf_uart[1], 0, MAX_BUF_UART_BYTES);
+        memset(g_buf_uart[1], 0, MAX_BUF_UART_BYTES);
         UART5_context.buffer_queue = &g_buf_queue_uart[1];
-
+        aos_sem_new(&scb5_tx_sema,0);
+        aos_mutex_new(&scb5_tx_mutex);
+        aos_mutex_new(&scb5_rx_mutex);
         break;
         
         default:

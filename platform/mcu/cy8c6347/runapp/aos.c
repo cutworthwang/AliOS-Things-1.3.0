@@ -42,7 +42,7 @@ void SysTick_IRQ(void)
 
 static void sys_init(void)
 {
-	  Cy_SysTick_Init(CY_SYSTICK_CLOCK_SOURCE_CLK_CPU, CYDEV_CLK_HFCLK0__HZ/RHINO_CONFIG_TICKS_PER_SECOND);
+    Cy_SysTick_Init(CY_SYSTICK_CLOCK_SOURCE_CLK_CPU, CYDEV_CLK_HFCLK0__HZ/RHINO_CONFIG_TICKS_PER_SECOND);
     Cy_SysTick_SetCallback(0, SysTick_IRQ);
 	
     default_UART_Init();
