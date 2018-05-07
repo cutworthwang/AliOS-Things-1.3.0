@@ -1187,14 +1187,6 @@ static void HandleDataReceive(CySCB_Type *base, cy_stc_scb_uart_context_t *conte
     context->rxBufIdx  += numCopied;
     context->rxBufSize -= numCopied;
 
-    /*
-     * Added to workaround long time blocking when receiving big packets during SSL handshake
-     */
-    if(context->buffer_queue != NULL)
-    {   
-        krhino_buf_queue_send(context->buffer_queue,context->rxBuf,numCopied);
-    }
-
     if (0UL == context->rxBufSize)
     {
         if (NULL != context->rxRingBuf)

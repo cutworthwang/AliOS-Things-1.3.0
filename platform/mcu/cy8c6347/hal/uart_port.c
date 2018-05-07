@@ -129,17 +129,15 @@ GETCHAR_PROTOTYPE
 }
 
 aos_sem_t scb1_tx_sema;
+aos_sem_t scb1_rx_sema;
 aos_sem_t scb5_tx_sema;
+aos_sem_t scb5_rx_sema;
 
 //for UART driver lock, if not added, kernel test will fail
 aos_mutex_t scb1_tx_mutex;
 aos_mutex_t scb1_rx_mutex;
 aos_mutex_t scb5_tx_mutex;
 aos_mutex_t scb5_rx_mutex;
-
-kbuf_queue_t g_buf_queue_uart[COMn];
-char g_buf_uart[COMn][MAX_BUF_UART_BYTES];
-const char *g_pc_buf_queue_name[COMn] = {"buf_queue_uart1", "buf_queue_uart5"};
 
 void scb1_callback(uint32_t event)
 {
@@ -150,6 +148,7 @@ void scb1_callback(uint32_t event)
         break;
 				
         case CY_SCB_UART_RECEIVE_DONE_EVENT:
+        aos_sem_signal(&scb1_rx_sema);
         break;
 				
         case CY_SCB_UART_TRANSMIT_IN_FIFO_EVENT:
@@ -180,6 +179,7 @@ void scb5_callback(uint32_t event)
         break;
 				
         case CY_SCB_UART_RECEIVE_DONE_EVENT:
+        aos_sem_signal(&scb5_rx_sema);
         break;
 				
         case CY_SCB_UART_TRANSMIT_IN_FIFO_EVENT:
@@ -201,63 +201,6 @@ void scb5_callback(uint32_t event)
 
 }
 
-int32_t hal_uart_recv_buf_queue_1byte(uart_dev_t *uart, uint8_t *pdata, uint32_t timeout)
-{
-    int32_t ret = 0;
-    size_t rev_size = 0;
-
-    switch(uart->port)
-    {
-        case UART1:
-        Cy_SCB_UART_Receive(SCB1, pdata, 1, &UART1_context);
-
-        if(UART1_context.buffer_queue != NULL)
-        {
-            ret = krhino_buf_queue_recv(UART1_context.buffer_queue, AOS_WAIT_FOREVER, pdata, &rev_size);     
-            if((ret == 0) && (rev_size == 1))
-            {
-                ret = 0;
-            }
-            else
-            {
-                ret = 2;
-            }
-        }
-        else
-        {
-            ret = 2;
-        }
-        break;
-        
-        case UART5:
-        Cy_SCB_UART_Receive(SCB5, pdata, 1, &UART5_context);
-
-        if(UART5_context.buffer_queue != NULL)
-        {
-            ret = krhino_buf_queue_recv(UART5_context.buffer_queue, AOS_WAIT_FOREVER, pdata, &rev_size);     
-            if((ret == 0) && (rev_size == 1))
-            {
-                ret = 0;
-            }
-            else
-            {
-                ret = 2;
-            }
-        }
-        else
-        {
-            ret = 2;
-        } 
-        break;       
-        
-        default:
-        break;
-    } 
-
-    return ret;
-}
-
-
 int32_t hal_uart_init(uart_dev_t *uart)
 {
     switch(uart->port)
@@ -265,12 +208,8 @@ int32_t hal_uart_init(uart_dev_t *uart)
         case UART1:
         UART1_Start();
         Cy_SCB_UART_RegisterCallback(SCB1, scb1_callback, &UART1_context);
-        if(krhino_buf_queue_create(&g_buf_queue_uart[0], g_pc_buf_queue_name[0], g_buf_uart[0], MAX_BUF_UART_BYTES, 1) != 0){
-            return -2;
-        }
-        memset(g_buf_uart[0], 0, MAX_BUF_UART_BYTES);
-        UART1_context.buffer_queue = &g_buf_queue_uart[0];
         aos_sem_new(&scb1_tx_sema,0);
+        aos_sem_new(&scb1_rx_sema,0);
         aos_mutex_new(&scb1_tx_mutex);
         aos_mutex_new(&scb1_rx_mutex);
         break;
@@ -278,12 +217,8 @@ int32_t hal_uart_init(uart_dev_t *uart)
         case UART5:
         UART5_Start();
         Cy_SCB_UART_RegisterCallback(SCB5, scb5_callback, &UART5_context);
-        if(krhino_buf_queue_create(&g_buf_queue_uart[1], g_pc_buf_queue_name[1], g_buf_uart[1], MAX_BUF_UART_BYTES, 1) != 0){
-            return -2;
-        }
-        memset(g_buf_uart[1], 0, MAX_BUF_UART_BYTES);
-        UART5_context.buffer_queue = &g_buf_queue_uart[1];
         aos_sem_new(&scb5_tx_sema,0);
+        aos_sem_new(&scb5_rx_sema,0);
         aos_mutex_new(&scb5_tx_mutex);
         aos_mutex_new(&scb5_rx_mutex);
         break;
@@ -306,7 +241,7 @@ int32_t hal_uart_send(uart_dev_t *uart, const void *data, uint32_t size, uint32_
     {
         case UART1:
         aos_mutex_lock(&scb1_tx_mutex, AOS_WAIT_FOREVER);
-        Cy_SCB_UART_Transmit(SCB1, (void *)data, size, &UART1_context);
+        Cy_SCB_UART_Transmit(SCB1, (void *)data, size, &UART1_context); 
         aos_sem_wait(&scb1_tx_sema, AOS_WAIT_FOREVER);
         aos_mutex_unlock(&scb1_tx_mutex);
         break;
@@ -337,19 +272,26 @@ int32_t hal_uart_recv_II(uart_dev_t *uart, void *data, uint32_t expect_size,
         return -1;
     }
     
-    if(uart->port == UART1)
-        aos_mutex_lock(&scb1_rx_mutex, AOS_WAIT_FOREVER);
-    else if(uart->port == UART5)
-        aos_mutex_lock(&scb5_rx_mutex, AOS_WAIT_FOREVER);
-
-    for (i = 0; i < expect_size; i++)
+    switch(uart->port)
     {
-        ret = hal_uart_recv_buf_queue_1byte(uart, &pdata[i], timeout); 
-        if (ret == 0) {
-            rx_count++;
-        } else {
-            break;
-        }
+    case UART1:
+        aos_mutex_lock(&scb1_rx_mutex, AOS_WAIT_FOREVER);
+        Cy_SCB_UART_Receive(SCB1, pdata, expect_size, &UART1_context);
+        aos_sem_wait(&scb1_rx_sema, AOS_WAIT_FOREVER);       
+        rx_count = Cy_SCB_UART_GetNumReceived(SCB1, &UART1_context);
+        aos_mutex_unlock(&scb1_rx_mutex);
+        break;
+
+    case UART5:
+        aos_mutex_lock(&scb5_rx_mutex, AOS_WAIT_FOREVER);
+        Cy_SCB_UART_Receive(SCB5, pdata, expect_size, &UART5_context);
+        aos_sem_wait(&scb5_rx_sema, AOS_WAIT_FOREVER);
+        rx_count = Cy_SCB_UART_GetNumReceived(SCB5, &UART5_context);
+        aos_mutex_unlock(&scb5_rx_mutex);
+        break;
+
+    default:
+        break;
     }
 
     if(recv_size != NULL)
@@ -365,11 +307,6 @@ int32_t hal_uart_recv_II(uart_dev_t *uart, void *data, uint32_t expect_size,
     {
         ret = -1;
     }
-
-    if(uart->port == UART1)
-        aos_mutex_unlock(&scb1_rx_mutex);
-    else if(uart->port == UART5)
-        aos_mutex_unlock(&scb5_rx_mutex);
 
     return ret;
 }
@@ -392,3 +329,4 @@ int32_t hal_uart_finalize(uart_dev_t *uart)
     
     return 0;
 }
+

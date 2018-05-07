@@ -5,8 +5,10 @@
 extern "C" {
 #endif
 	 
+//#include <aos/kernel.h>
+
 /* bufferQueue for uart */
-#define MAX_BUF_UART_BYTES  2000
+#define MAX_BUF_UART_BYTES  5000
 #define COMn    2
 
 typedef enum {
