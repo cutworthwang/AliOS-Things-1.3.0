@@ -96,11 +96,12 @@ GETCHAR_PROTOTYPE;
   */
 PUTCHAR_PROTOTYPE
 {
-  if (ch == '\n') {
-    hal_uart_send(&console_uart, (void *)"\r", 1, 30000);
-  }
-  hal_uart_send(&console_uart, &ch, 1, 30000);
-  return ch;
+    if (ch == '\n') {
+        hal_uart_send(&console_uart, (void *)"\r", 1, 30000);
+    }
+    hal_uart_send(&console_uart, &ch, 1, 30000);
+    
+    return ch;
 }
 
 /**
@@ -110,22 +111,21 @@ PUTCHAR_PROTOTYPE
   */
 GETCHAR_PROTOTYPE
 {
-  /* Place your implementation of fgetc here */
-  /* e.g. readwrite a character to the USART2 and Loop until the end of transmission */
+    /* Place your implementation of fgetc here */
+    /* e.g. readwrite a character to the USART2 and Loop until the end of transmission */
     uint8_t ch = 0;
     uint32_t recv_size;
-	int32_t ret = 0;
-	
+    int32_t ret = 0;
+
     ret = hal_uart_recv_II(&console_uart, &ch, 1, &recv_size, HAL_WAIT_FOREVER);
-	
-	if(ret == 0)
-	{
-		return ch;
-	}
-	else
-	{
-		return -1;
-	}
+    if(ret == 0)
+    {
+        return ch;
+    }
+    else
+    {
+        return -1;
+    }
 }
 
 aos_sem_t scb1_tx_sema;
@@ -277,7 +277,7 @@ int32_t hal_uart_recv_II(uart_dev_t *uart, void *data, uint32_t expect_size,
     case UART1:
         aos_mutex_lock(&scb1_rx_mutex, AOS_WAIT_FOREVER);
         Cy_SCB_UART_Receive(SCB1, pdata, expect_size, &UART1_context);
-        aos_sem_wait(&scb1_rx_sema, AOS_WAIT_FOREVER);       
+        aos_sem_wait(&scb1_rx_sema, timeout);       
         rx_count = Cy_SCB_UART_GetNumReceived(SCB1, &UART1_context);
         aos_mutex_unlock(&scb1_rx_mutex);
         break;
@@ -285,7 +285,7 @@ int32_t hal_uart_recv_II(uart_dev_t *uart, void *data, uint32_t expect_size,
     case UART5:
         aos_mutex_lock(&scb5_rx_mutex, AOS_WAIT_FOREVER);
         Cy_SCB_UART_Receive(SCB5, pdata, expect_size, &UART5_context);
-        aos_sem_wait(&scb5_rx_sema, AOS_WAIT_FOREVER);
+        aos_sem_wait(&scb5_rx_sema, timeout);
         rx_count = Cy_SCB_UART_GetNumReceived(SCB5, &UART5_context);
         aos_mutex_unlock(&scb5_rx_mutex);
         break;
