@@ -7,16 +7,16 @@
 #include "cutest/cut.h"
 
 #ifndef SYSINFO_ARCH
-#define SYSINFO_ARCH        ""
+#define SYSINFO_ARCH        "CORTEX-M0"
 #endif
 #ifndef SYSINFO_MCU
-#define SYSINFO_MCU         ""
+#define SYSINFO_MCU         "PSoC4A-S3"
 #endif
 #ifndef SYSINFO_DEVICE_NAME
-#define SYSINFO_DEVICE_NAME ""
+#define SYSINFO_DEVICE_NAME "CY8C4147"
 #endif
 #ifndef SYSINFO_APP_VERSION
-#define SYSINFO_APP_VERSION ""
+#define SYSINFO_APP_VERSION "AOS-1.3.0"
 #endif
 #define SYSINFO_KERNEL      "AOS"
 
@@ -48,7 +48,7 @@
 #endif
 
 /* timer test */
-#define TEST_CONFIG_TIMER_ENABLED               (1)
+#define TEST_CONFIG_TIMER_ENABLED               (0)
 
 /* kv test */
 #ifndef TEST_CONFIG_KV_ENABLED
@@ -60,7 +60,7 @@
 
 /* yloop test */
 #ifndef TEST_CONFIG_YLOOP_ENABLED
-#define TEST_CONFIG_YLOOP_ENABLED               (1)
+#define TEST_CONFIG_YLOOP_ENABLED               (0)
 #endif
 #if (TEST_CONFIG_YLOOP_ENABLED)
 #define TEST_CONFIG_YLOOP_EVENT_COUNT           (1000)
