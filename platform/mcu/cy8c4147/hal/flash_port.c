@@ -23,9 +23,9 @@ extern const hal_logic_partition_t hal_partitions[];
   */
 int FLASH_update(uint32_t dst_addr, const void *data, uint32_t size)
 {
-    #if 0
     int remaining = size;
     uint8_t * src_addr = (uint8_t *) data;
+    uint32 status;
 
     uint32_t * page_cache = NULL;
     page_cache = (uint32_t *)aos_malloc(FLASH_PAGE_SIZE);
@@ -43,11 +43,10 @@ int FLASH_update(uint32_t dst_addr, const void *data, uint32_t size)
         /* Update the cache from the source */
         memcpy((uint8_t *)page_cache + fl_offset, src_addr, len);
 
-        CySysFlashWriteRow(fl_addr/FLASH_PAGE_SIZE, 
-        status = Cy_Flash_WriteRow(fl_addr, page_cache);
-        if(status != CY_FLASH_DRV_SUCCESS)
+        status = CySysFlashWriteRow(fl_addr/FLASH_PAGE_SIZE, (uint8 *)page_cache);
+        if(status != CY_SYS_FLASH_SUCCESS)
         {
-            printf("Error writing %lu bytes at 0x%08lx\n", FLASH_PAGE_SIZE, fl_addr);
+            printf("Error writing %u bytes at 0x%08x\n", FLASH_PAGE_SIZE, fl_addr);
         }
         else
         {
@@ -56,10 +55,9 @@ int FLASH_update(uint32_t dst_addr, const void *data, uint32_t size)
             remaining -= len;
         }
     }
-    while ((status == CY_FLASH_DRV_SUCCESS) && (remaining > 0));
+    while ((status == CY_SYS_FLASH_SUCCESS) && (remaining > 0));
 
     aos_free(page_cache);
-    #endif
     
     return 0;
 }
@@ -75,7 +73,7 @@ int FLASH_update(uint32_t dst_addr, const void *data, uint32_t size)
   */
 int FLASH_read_at(uint32_t address, uint8_t *pData, uint32_t len_bytes)
 {
-    int i;
+    uint32 i;
     int ret = -1;
     uint8_t *src = (uint8_t *)(address);
     uint8_t *dst = (uint8_t *)(pData);
@@ -116,13 +114,11 @@ int32_t hal_flash_write(hal_partition_t pno, uint32_t* poff, const void* buf ,ui
 		
     partition_info = hal_flash_get_info( real_pno );
     start_addr = partition_info->partition_start_addr + *poff;
-#if 0
-    if (CY_FLASH_DRV_SUCCESS != FLASH_update(start_addr, buf, buf_size)) {
+    
+    if (0 != FLASH_update(start_addr, buf, buf_size)) {
         printf("FLASH_update failed!\n");
     }
     *poff += buf_size;
-#endif
-    
 
     return 0;
 }
@@ -158,6 +154,7 @@ int32_t hal_flash_erase(hal_partition_t pno, uint32_t off_set,
                         uint32_t size)
 {
     uint32_t start_addr;
+    uint32 status;
     hal_logic_partition_t *partition_info;
     hal_partition_t real_pno;
     uint32_t * page_cache = NULL;
@@ -182,31 +179,36 @@ int32_t hal_flash_erase(hal_partition_t pno, uint32_t off_set,
         return -1;
 
     start_addr = ROUND_DOWN((partition_info->partition_start_addr + off_set), FLASH_PAGE_SIZE);
-#if 0
+
     for(uint32_t i=0; i<size/FLASH_PAGE_SIZE; i++)
     {
-        status = Cy_Flash_WriteRow(start_addr, page_cache);
+        status = CySysFlashWriteRow(start_addr/FLASH_PAGE_SIZE, (uint8 *)page_cache);
   
-        if(status != CY_FLASH_DRV_SUCCESS)
+        if(status != CY_SYS_FLASH_SUCCESS)
         {
             printf("Flash erase failed\n");
         }
         start_addr += FLASH_PAGE_SIZE;
     }
     aos_free(page_cache);
-#endif
 
     return 0;
 }
 
 int32_t hal_flash_enable_secure(hal_partition_t partition, uint32_t off_set, uint32_t size)
 {
+    (void)partition;
+    (void)off_set;
+    (void)size;
+    
     return 0;
 }
 
 int32_t hal_flash_dis_secure(hal_partition_t partition, uint32_t off_set, uint32_t size)
 {
+    (void)partition;
+    (void)off_set;
+    (void)size;
+    
     return 0;
 }
-
-

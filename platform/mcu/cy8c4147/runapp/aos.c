@@ -7,18 +7,27 @@
 #include <k_api.h>
 #include <stdio.h>
 #include <aos\aos.h>
-//#include <vfs.h>
 
-#define AOS_START_STACK 512
+#define AOS_START_STACK 1024
 
 ktask_t *g_aos_init;
 aos_task_t task;
 static kinit_t kinit;
 
-extern int application_start(int argc, char **argv);
-extern void board_init(void);
-extern int default_UART_Init(void);
-	
+void board_init(void);
+int default_UART_Init(void);
+void test_certificate(void);
+
+int application_start(int argc, char **argv)
+{
+    //supress warning
+    (void)argc;
+    (void)argv;
+    
+    test_certificate();
+    return 0;
+}
+
 void PendSV_Handler(void);
 
 static void var_init()
@@ -41,8 +50,7 @@ static void sys_init(void)
 	
     board_init();
     var_init();
-    aos_kernel_init(&kinit);
-    
+    aos_kernel_init(&kinit);   
 }
 
 static void sys_start(void)

@@ -8,6 +8,9 @@
 #include <aos\kernel.h>
 
 uart_dev_t uart_0;
+#ifndef CERTIFICATION
+uart_os_t uart_os[UARTn];
+#endif
 
 static uart_dev_t console_uart={
   .port=STDIO_UART,
@@ -26,20 +29,88 @@ int default_UART_Init(void)
 }
 
 #if defined (__CC_ARM) && defined(__MICROLIB)
-#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#define GETCHAR_PROTOTYPE int fgetc(FILE *f)
-#elif defined(__ICCARM__)
-#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#define GETCHAR_PROTOTYPE int fgetc(FILE *f)
-#else
-#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#define GETCHAR_PROTOTYPE int __io_getchar(void)
-
-PUTCHAR_PROTOTYPE;
-GETCHAR_PROTOTYPE;
+ 
+    /***************************************************************************
+    * Function Name: fputc
+    ***************************************************************************/
+    __attribute__((weak)) int fputc(int ch, FILE *f)
+    {
+        (void)f;
+        if (ch == '\n') {
+            hal_uart_send(&console_uart, (void *)"\r", 1, 30000);
+        }
+        hal_uart_send(&console_uart, &ch, 1, 30000);
+        return (ch);
+    }
     
-/* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
-   set to 'Yes') calls __io_putchar() */
+    /***************************************************************************
+    * Function Name: fgetc
+    ***************************************************************************/
+    __attribute__((weak)) int fgetc(FILE *f) 
+    {
+        (void)f;
+        uint8_t ch = 0;
+        uint32_t recv_size;
+        int32_t ret = 0;
+
+        ret = hal_uart_recv_II(&console_uart, &ch, 1, &recv_size, HAL_WAIT_FOREVER);
+        if(ret == 0)
+        {
+            return ch;
+        }
+        else
+        {
+            return -1;
+        }        
+    }
+#elif defined(__ICCARM__)
+    #include <yfuns.h>
+
+    /***************************************************************************
+    * Function Name: __write
+    ***************************************************************************/
+    __weak size_t __write(int handle, const unsigned char * buffer, size_t size)
+    {
+        size_t nChars = 0;
+        /* This template only writes to "standard out", for all other file
+        * handles it returns failure. */
+        if (handle != _LLIO_STDOUT)
+        {
+            return (_LLIO_ERROR);
+        }
+        if (buffer != NULL)
+        {
+            for (/* Empty */; nChars < size; ++nChars)
+            {
+                if(*buffer == '\n')
+                {
+                    hal_uart_send(&console_uart, (void *)"\r", 1, 30000);
+                }
+                hal_uart_send(&console_uart, buffer, 1, 30000);
+                ++buffer;
+            }
+        }
+        return (nChars);
+    }
+
+    __weak size_t __read(int handle, unsigned char * buffer, size_t size)
+    {
+        uint32_t recv_size;
+        int32_t ret = 0;
+        
+        /* This template only reads from "standard in", for all other file
+        handles it returns failure. */
+        if ((handle != _LLIO_STDIN) || (buffer == NULL))
+        {
+            return (_LLIO_ERROR);
+        }
+        else
+        {
+            ret = hal_uart_recv_II(&console_uart, buffer, 1, &recv_size, HAL_WAIT_FOREVER);
+            return (1);
+        }
+    }    
+#else /* (__GNUC__)  GCC */
     /* Add an explicit reference to the floating point printf library to allow
     the usage of floating point conversion specifier. */
     __asm (".global _printf_float");
@@ -56,25 +127,30 @@ GETCHAR_PROTOTYPE;
             {
                 if(*ptr == '\n')
                 {
-                    __io_putchar('\r');
+                    hal_uart_send(&console_uart, (void *)"\r", 1, 30000);
                 }
-                __io_putchar((uint32_t)*ptr);
+                hal_uart_send(&console_uart, ptr, 1, 30000);
                 ++ptr;
             }
         }
         return (nChars);
     }
     
+    /* Add an explicit reference to the floating point scanf library to allow
+    the usage of floating point conversion specifier. */
     __asm (".global _scanf_float");
     __attribute__((weak)) int _read (int fd, char *ptr, int len)
     {
         int nChars = 0;
+        uint32_t recv_size;
+        int32_t ret = 0;
+        
         (void)fd;
         if (ptr != NULL)
         {
             for(/* Empty */;nChars < len;++ptr)
             {
-                *ptr = (char)__io_getchar();
+                ret = hal_uart_recv_II(&console_uart, ptr, 1, &recv_size, HAL_WAIT_FOREVER);
                 ++nChars;
                 if(*ptr == '\n')
                 {
@@ -83,46 +159,74 @@ GETCHAR_PROTOTYPE;
             }
         }
         return (nChars);
-    }    
+    } 
 #endif /* defined (__CC_ARM) && defined(__MICROLIB) */
 
-/**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
-PUTCHAR_PROTOTYPE
+
+void UART_API(_customISR)(void)
 {
-  if (ch == '\n') {
-    hal_uart_send(&console_uart, (void *)"\r", 1, 30000);
-  }
-  hal_uart_send(&console_uart, &ch, 1, 30000);
-  return ch;
+#if 0
+    /* TX FIFO empty */
+    if(0u != (UART_API(_GetTxInterruptSourceMasked()) & UART_FLAG(_INTR_TX_EMPTY)))
+    {
+        UART_API(_ClearTxInterruptSource)(UART_FLAG(_INTR_TX_EMPTY));
+    }
+    
+    /* TX FIFO overflow */
+    if(0u != (UART_API(_GetTxInterruptSourceMasked()) & UART_FLAG(_INTR_TX_OVERFLOW)))
+    {
+        UART_API(_ClearTxInterruptSource)(UART_FLAG(_INTR_TX_OVERFLOW));
+    }    
+    
+    /* TX FIFO underflow */
+    if(0u != (UART_API(_GetTxInterruptSourceMasked()) & UART_FLAG(_INTR_TX_UNDERFLOW)))
+    {
+        UART_API(_ClearTxInterruptSource)(UART_FLAG(_INTR_TX_UNDERFLOW));
+    }
+#endif
+
+    /* UART done */
+    if(0u != (UART_API(_GetTxInterruptSourceMasked)() & UART_FLAG(_INTR_TX_UART_DONE)))
+    {
+        UART_API(_ClearTxInterruptSource)(UART_FLAG(_INTR_TX_UART_DONE));
+        #ifndef CERTIFICATION
+        //need to change to something more generic
+        aos_sem_signal(&uart_os[STDIO_UART].uart_tx_sem);
+        #endif
+    }
+
+#if 0
+    /* RX FIFO full */
+    if(0u != (UART_API(_GetRxInterruptSourceMasked()) & UART_FLAG(_INTR_RX_FULL)))
+    {
+        UART_API(_ClearRxInterruptSource)(UART_FLAG(_INTR_RX_FULL));
+    }    
+    /* RX FIFO overflow */
+    if(0u != (UART_API(_GetRxInterruptSourceMasked()) & UART_FLAG(_INTR_RX_OVERFLOW)))
+    {
+        UART_API(_ClearRxInterruptSource)(UART_FLAG(_INTR_RX_OVERFLOW));
+    }    
+    /* RX FIFO underflow */
+    if(0u != (UART_API(_GetRxInterruptSourceMasked()) & UART_FLAG(_INTR_RX_UNDERFLOW)))
+    {
+        UART_API(_ClearRxInterruptSource)(UART_FLAG(_INTR_RX_UNDERFLOW));
+    }    
+#endif
 }
-
-/**
-  * @brief  Retargets the C library scanf function to the USART.
-  * @param  None
-  * @retval None
-  */
-GETCHAR_PROTOTYPE
-{
-  /* Place your implementation of fgetc here */
-  /* e.g. readwrite a character to the USART2 and Loop until the end of transmission */
-  uint8_t ch = 0;
-  uint32_t recv_size;
-  hal_uart_recv(&console_uart, &ch, 1, 30000);
-  return ch;
-}
-
-
 
 int32_t hal_uart_init(uart_dev_t *uart)
 {
     switch(uart->port)
     {
-        case UART3:
-        SCB3_Start();
+        case UART0:
+        #ifndef CERTIFICATION
+        aos_sem_new(&uart_os[uart->port].uart_tx_sem, 0);
+        aos_sem_new(&uart_os[uart->port].uart_rx_sem, 0);
+        aos_mutex_new(&uart_os[uart->port].uart_tx_mutex);
+        aos_mutex_new(&uart_os[uart->port].uart_rx_mutex);
+        #endif
+        UART_API(_SetCustomInterruptHandler)(&UART_API(_customISR));
+        UART_API(_Start)();
         break;
         
         default:
@@ -133,24 +237,32 @@ int32_t hal_uart_init(uart_dev_t *uart)
 
 int32_t hal_uart_send(uart_dev_t *uart, const void *data, uint32_t size, uint32_t timeout)
 {
-    uint32 *pdata = (uint32 *)data;
+    uint8 *pdata = (uint8 *)data;
     uint32 i = 0;
-
-    (void)timeout;
+    
+    (void) timeout;
+    
+    if((uart == NULL) || (data == NULL))
+    {
+        return -1;
+    }
     
     switch(uart->port)
     {
-        case UART3:
-        for(i = 0; i < size; i++)
-        {
-            SCB3_UartPutChar(*pdata);
-            break;
-        }
+        case UART0:
+        #ifndef CERTIFICATION
+        aos_mutex_lock(&uart_os[uart->port].uart_tx_mutex, AOS_WAIT_FOREVER);
+        #endif
+        UART_API(_SpiUartPutArray)(pdata, size);
+        #ifndef CERTIFICATION
+        aos_sem_wait(&uart_os[uart->port].uart_tx_sem, AOS_WAIT_FOREVER);
+        aos_mutex_unlock(&uart_os[uart->port].uart_tx_mutex);
+        #endif
+        break;
         
         default:
         break;
-    }
-    return 0;
+    }    return 0;
 }
 
 int32_t hal_uart_recv(uart_dev_t *uart, void *data, uint32_t expect_size, uint32_t timeout)
@@ -162,11 +274,17 @@ int32_t hal_uart_recv(uart_dev_t *uart, void *data, uint32_t expect_size, uint32
     
     switch(uart->port)
     {
-        case UART3:
+        case UART0:
+        #ifndef CERTIFICATION
+        aos_mutex_lock(&uart_os[uart->port].uart_rx_mutex, AOS_WAIT_FOREVER);
+        #endif
         for(i = 0; i < expect_size; i++)
         {
-            *pdata = SCB3_UartGetChar();
+            *pdata = UART_API(_UartGetChar());
         }
+        #ifndef CERTIFICATION
+        aos_mutex_unlock(&uart_os[uart->port].uart_rx_mutex);
+        #endif
         break;
         
         default:
@@ -179,12 +297,55 @@ int32_t hal_uart_recv(uart_dev_t *uart, void *data, uint32_t expect_size, uint32
 int32_t hal_uart_recv_II(uart_dev_t *uart, void *data, uint32_t expect_size,
                       uint32_t *recv_size, uint32_t timeout)
 {
+    uint32 *pdata = (uint32 *)data;
+    uint32 i = 0;
+    uint32 rx_count = 0;
+    
+    (void)timeout;
+    
+    switch(uart->port)
+    {
+        case UART0:
+        #ifndef CERTIFICATION
+        aos_mutex_lock(&uart_os[uart->port].uart_rx_mutex, AOS_WAIT_FOREVER);
+        #endif
+        for(i = 0; i < expect_size; i++)
+        {
+            *pdata = UART_API(_UartGetChar());
+            if(*pdata != 0x0)
+            {
+                rx_count++;
+            }   
+        }
+        if(recv_size != NULL)
+        {
+            *recv_size = rx_count;
+        }
+        #ifndef CERTIFICATION
+        aos_mutex_unlock(&uart_os[uart->port].uart_rx_mutex);
+        #endif
+        break;
+        
+        default:
+        break;
+    }
+    
     return 0;
 }
 
 int32_t hal_uart_finalize(uart_dev_t *uart)
 {
     (void)uart;
+    
+    switch(uart->port)
+    {
+        case UART0:
+        UART_API(_Stop());
+        break;
+        
+        default:
+        break;
+    }
     
     return 0;
 }

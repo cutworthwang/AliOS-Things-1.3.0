@@ -98,11 +98,16 @@ krhino_err_proc_t g_err_proc = soc_err_proc;
 #if defined (__GNUC__)&&!defined(__CC_ARM)
 extern uint32_t __cy_heap_start[];
 extern uint32_t __cy_heap_end[];
-extern uint32_t __cy_heap_size[];
+/* 
+ * If need to use all rest RAM area, then need to define __cy_heap_size in linker file. 
+ * But remember, regenerate code will overwrite linker file content.
+ * For now, define 0x2f00 as heap size which will not overflow ram.
+*/
+//extern uint32_t __cy_heap_size[];
 
 k_mm_region_t g_mm_region[] = {
 {
-   (uint8_t *)__cy_heap_start, (uint8_t *)__cy_heap_size},
+   (uint8_t *)__cy_heap_start, (uint32_t)0x2f00},
 };
 #elif defined (__CC_ARM)
 extern uint32_t Image$$ARM_LIB_HEAP$$ZI$$Base[];
