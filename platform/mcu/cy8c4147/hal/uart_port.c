@@ -28,6 +28,7 @@ int default_UART_Init(void)
     return hal_uart_init(&uart_0);
 }
 
+#ifndef NO_PRINTF
 #if defined (__CC_ARM) && defined(__MICROLIB)
  
     /***************************************************************************
@@ -161,6 +162,8 @@ int default_UART_Init(void)
         return (nChars);
     } 
 #endif /* defined (__CC_ARM) && defined(__MICROLIB) */
+
+#endif
 
 
 void UART_API(_customISR)(void)
